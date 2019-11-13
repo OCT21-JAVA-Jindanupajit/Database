@@ -143,7 +143,7 @@ public class Main {
     public static void cmdLinkList(String[] args) {
         for (LinkCompanyPerson linkCompanyPerson : linkCompanyPeopleDatabase) {
             Company company = getCompanyById(linkCompanyPerson.getCompanyId());
-            Person person = getPersonById(linkCompanyPerson.getPeopleId());
+            Person person = getPersonById(linkCompanyPerson.getPersonId());
 
             System.out.printf("- %3d %-30s %-30s\n", linkCompanyPerson.getId(), String.format("%3d %s",company.getId(),company), String.format("%3d %s", person.getId(), person));
         }
@@ -170,13 +170,49 @@ public class Main {
         if ((company ==  null)||(person ==  null))
             return;
 
+        if (getLinkByPerson(person) != null) {
+            System.out.printf("#%d '%s' is already linked to a company\n\n",person.getId(), person.getName());
+            return;
+        }
+
         addLinkCompanyPerson(new LinkCompanyPerson(LinkCompanyPerson.getAutoIdValue()+1, companyId, personId));
 
         System.out.printf("Link added.\n");
     }
 
     public static void cmdLinkEdit(String[] args) {
+        if (args.length != 4) {
+            System.out.println("Usage: link edit <company-id> <people-id>\n");
+            return;
+        }
 
+        long companyId = Long.parseLong(args[2]);
+        long personId = Long.parseLong(args[3]);
+
+        Company company = getCompanyById(companyId);
+        Person person = getPersonById(personId);
+
+        if (company == null)
+            System.out.println("No such 'id' in 'company' database\n");
+
+        if (person == null)
+            System.out.println("No such 'id' in 'people' database\n");
+
+        if ((company ==  null)||(person ==  null))
+            return;
+
+        LinkCompanyPerson linkCompanyPerson = getLinkByPerson(person);
+
+        if (linkCompanyPerson == null) {
+            System.out.printf("#%d '%s' is not linked to any company\n",person.getId(), person.getName());
+            System.out.println("Use link add instead\n");
+            return;
+        }
+
+        linkCompanyPerson.setCompanyId(company.getId());
+        linkCompanyPerson.setPersonId(person.getId());
+
+        System.out.printf("Link %d -> %d updated.\n", company.getId(), person.getId());
     }
 
 
@@ -227,7 +263,7 @@ public class Main {
     public static void listAll() {
         for (LinkCompanyPerson linkCompanyPerson : linkCompanyPeopleDatabase) {
             Company company = getCompanyById(linkCompanyPerson.getCompanyId());
-            Person person = getPersonById(linkCompanyPerson.getPeopleId());
+            Person person = getPersonById(linkCompanyPerson.getPersonId());
 
             System.out.printf("%s -> %s\n", company, person);
         }
@@ -241,12 +277,11 @@ public class Main {
         return null;
     }
 
-    public static Company getCompanyByPerson(Person personToFind) {
+    public static LinkCompanyPerson getLinkByPerson(Person person) {
         for (LinkCompanyPerson linkCompanyPerson : linkCompanyPeopleDatabase) {
-            Company company = getCompanyById(linkCompanyPerson.getCompanyId());
-            Person person = getPersonById(linkCompanyPerson.getPeopleId());
+            if (linkCompanyPerson.getPersonId() == person.getId())
 
-            System.out.printf("%s -> %s\n", company, person);
+            return linkCompanyPerson;
         }
         return null;
     }

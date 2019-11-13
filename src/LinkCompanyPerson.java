@@ -2,24 +2,24 @@ public class LinkCompanyPerson {
     private static long autoIdValue = 0;
     private long id;
     private long companyId;
-    private long peopleId;
+    private long personId;
 
     public LinkCompanyPerson() {
         this.id = 0;
         this.companyId = 0;
-        this.peopleId = 0;
+        this.personId = 0;
     }
 
-    public LinkCompanyPerson(long companyId, long peopleId) {
+    public LinkCompanyPerson(long companyId, long personId) {
         this.id = LinkCompanyPerson.getAutoIdValue();
         this.companyId = companyId;
-        this.peopleId = peopleId;
+        this.personId = personId;
     }
 
-    public LinkCompanyPerson(long id, long companyId, long peopleId) {
+    public LinkCompanyPerson(long id, long companyId, long personId) {
         this.id = id;
         this.companyId = companyId;
-        this.peopleId = peopleId;
+        this.personId = personId;
     }
 
 
@@ -48,11 +48,11 @@ public class LinkCompanyPerson {
         this.companyId = companyId;
     }
 
-    public long getPeopleId() {
-        return peopleId;
+    public long getPersonId() {
+        return personId;
     }
 
-    public void setPeopleId(long peopleId) {
-        this.peopleId = peopleId;
+    public void setPersonId(long personId) {
+        this.personId = personId;
     }
 }
